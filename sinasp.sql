@@ -54,12 +54,19 @@ CREATE TABLE telefone (
   FOREIGN KEY (tipo_id) REFERENCES telefone_tipo(id)
 );
 
+-- 'M', 'F', ...
+CREATE TABLE pessoa_sexo (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  nome                  VARCHAR(50)   UNIQUE NOT NULL
+);
+
 CREATE TABLE pessoa (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
+  sexo_id               INT,
   nome                  VARCHAR(255)  NOT NULL,
   data_nascimento       DATE,
-  sexo                  ENUM('M', 'F', 'O'),
-  descricao             TEXT
+  descricao             TEXT,
+  FOREIGN KEY (sexo_id) REFERENCES pessoa_sexo(id)
 );
 
 CREATE TABLE pessoa_endereco (
@@ -88,11 +95,18 @@ CREATE TABLE condutor (
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
 
+-- 'A', 'B', 'C', 'D', 'E', ...
+CREATE TABLE  categoria_cnh (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  nome                  VARCHAR(50)   NOT NULL
+);
+
 CREATE TABLE condutor_categoria (
   condutor_id           INT,
-  categoria             ENUM('A', 'B', 'C', 'D', 'E'),
-  PRIMARY KEY (condutor_id, categoria),
-  FOREIGN KEY (condutor_id) REFERENCES condutor(id)
+  categoria_cnh_id      INT,
+  PRIMARY KEY (condutor_id, categoria_cnh_id),
+  FOREIGN KEY (condutor_id) REFERENCES condutor(id),
+  FOREIGN KEY (categoria_cnh_id) REFERENCES categoria_cnh(id)
 );
 
 CREATE TABLE cidadao (
@@ -103,17 +117,18 @@ CREATE TABLE cidadao (
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
 
+-- 'POLICIA', 'BOMBEIRO', 'DEFESA_CIVIL', 'TRANSITO', 'JUDICIAL', 'FISCAL', ...
+CREATE TABLE agencia_tipo (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  nome                  VARCHAR(50)   UNIQUE NOT NULL
+);
+
 CREATE TABLE agencia (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
+  tipo_id               INT,
   sigla                 VARCHAR(10)   UNIQUE NOT NULL,
   nome                  VARCHAR(255)  NOT NULL,
-  tipo                  ENUM('POLICIA',
-                             'BOMBEIRO',
-                             'DEFESA_CIVIL',
-                             'TRANSITO',
-                             'JUDICIAL',
-                             'FISCAL',
-                             'OUTRO') NOT NULL
+  FOREIGN KEY (tipo_id) REFERENCES agencia_tipo(id)
 );
 
 CREATE TABLE agencia_telefone (
@@ -124,17 +139,20 @@ CREATE TABLE agencia_telefone (
   FOREIGN KEY (telefone_id) REFERENCES telefone(id)
 );
 
+-- 'DELEGACIA', 'BATALHAO', 'BASE', 'SEDE', 'POSTO', ...
+CREATE TABLE unidade_tipo (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  nome                  VARCHAR(50)   UNIQUE NOT NULL
+);
+
 CREATE TABLE unidade (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
   agencia_id            INT           NOT NULL,
+  tipo_id               INT,
   endereco_id           INT           NOT NULL,
   nome                  VARCHAR(255)  NOT NULL,
-  tipo                  ENUM('DELEGACIA',
-                             'BATALHAO',
-                             'BASE',
-                             'SEDE',
-                             'POSTO'),
   FOREIGN KEY (agencia_id) REFERENCES agencia(id),
+  FOREIGN KEY (tipo_id) REFERENCES unidade_tipo(id),
   FOREIGN KEY (endereco_id) REFERENCES endereco(id)
 );
 
@@ -196,13 +214,12 @@ CREATE TABLE certificacao (
   FOREIGN KEY (treinamento_id) REFERENCES treinamento_capacitacao(id)
 );
 
-
 -- 'CARRO', 'MOTO', 'CAMINHAO', 'VAN', 'ONIBUS', 'CAMINHONETE', 'TRATOR',
 -- 'MOTOCICLETA', 'BARCO', 'JET_SKI', 'LANCHA', 'BOTE', 'DRONE', 'HELICOPTERO',
 -- 'AVIAO', 'AMBULANCIA', 'VEICULO_CRIMINOSO', ...
 CREATE TABLE veiculo_tipo (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  nome                  VARCHAR(255)  UNIQUE NOT NULL
+  nome                  VARCHAR(50)   UNIQUE NOT NULL
 );
 
 CREATE TABLE veiculo (
@@ -232,7 +249,7 @@ CREATE TABLE restricao_veicular (
 -- 'DISPONIVEL', 'EM_SERVICO', 'EM_MANUTENCAO', 'FORA_DE_SERVICO', 'RESERVADA', ...
 CREATE TABLE viatura_status (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  nome                  VARCHAR(255)  UNIQUE NOT NULL
+  nome                  VARCHAR(50)   UNIQUE NOT NULL
 );
 
 CREATE TABLE viatura (
@@ -252,6 +269,19 @@ CREATE TABLE equipamento (
   descricao             TEXT,
   status                VARCHAR(50),
   FOREIGN KEY (unidade_id) REFERENCES unidade(id)
+);
+
+CREATE TABLE arma_tipo (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  nome                  VARCHAR(100)  UNIQUE NOT NULL
+);
+
+CREATE TABLE arma (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  tipo_id               INT,
+  numero_serie          VARCHAR(255)  UNIQUE,
+  descricao             TEXT,
+  FOREIGN KEY (tipo_id) REFERENCES arma_tipo(id)
 );
 
 CREATE TABLE alocacao_recurso (
@@ -317,8 +347,8 @@ CREATE TABLE orgao_fiscal (
 
 CREATE TABLE infracao (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  condutor_id           INT NOT NULL,
-  veiculo_id            INT NOT NULL,
+  condutor_id           INT           NOT NULL,
+  veiculo_id            INT           NOT NULL,
   orgao_fiscal_id       INT,
   codigo                VARCHAR(255),
   descricao             TEXT,
@@ -331,7 +361,7 @@ CREATE TABLE infracao (
 CREATE TABLE multa (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
   infracao_id           INT,
-  numero_multa          VARCHAR(255),
+  numero                VARCHAR(50),
   valor                 DECIMAL(12,2),
   data_emissao          DATE,
   data_vencimento       DATE,
@@ -350,7 +380,7 @@ CREATE TABLE recurso_infracao (
   FOREIGN KEY (requerente_id) REFERENCES pessoa(id)
 );
 
-CREATE TABLE tipo_crime (
+CREATE TABLE crime_tipo (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
   nome                  VARCHAR(255)  UNIQUE NOT NULL,
   codigo_legal          VARCHAR(255)
@@ -358,11 +388,11 @@ CREATE TABLE tipo_crime (
 
 CREATE TABLE crime (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  tipo_crime_id         INT,
+  tipo_id               INT,
   pessoa_id             INT           NOT NULL,
   descricao             TEXT,
   gravidade             INT,
-  FOREIGN KEY (tipo_crime_id) REFERENCES tipo_crime(id),
+  FOREIGN KEY (tipo_id) REFERENCES crime_tipo(id),
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
 
@@ -394,9 +424,9 @@ CREATE TABLE criminoso_organizado (
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
 
-CREATE TABLE tipo_ocorrencia (
+CREATE TABLE ocorrencia_tipo (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  nome                  VARCHAR(255)  UNIQUE NOT NULL
+  nome                  VARCHAR(50)   UNIQUE NOT NULL
 );
 
 CREATE TABLE ocorrencia (
@@ -407,9 +437,17 @@ CREATE TABLE ocorrencia (
   data_hora             DATETIME,
   status                VARCHAR(50),
   descricao             TEXT,
-  FOREIGN KEY (tipo_id) REFERENCES tipo_ocorrencia(id),
+  FOREIGN KEY (tipo_id) REFERENCES ocorrencia_tipo(id),
   FOREIGN KEY (endereco_id) REFERENCES endereco(id),
   FOREIGN KEY (unidade_id) REFERENCES unidade(id)
+);
+
+CREATE TABLE ocorrencia_crime (
+  ocorrencia_id         INT,
+  crime_id              INT,
+  PRIMARY KEY (ocorrencia_id, crime_id),
+  FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id),
+  FOREIGN KEY (crime_id) REFERENCES crime(id)
 );
 
 -- 'VITIMA', 'SUSPEITO', 'TESTEMUNHA', 'COMUNICANTE', 'AGENTE', ...
@@ -429,6 +467,16 @@ CREATE TABLE participante_ocorrencia (
   FOREIGN KEY (papel_id) REFERENCES participante_ocorrencia_papel(id)
 );
 
+CREATE TABLE ocorrencia_depoimento (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  ocorrencia_id         INT,
+  participante_id       INT,
+  texto                 TEXT,
+  data_hora             DATETIME,
+  FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id),
+  FOREIGN KEY (participante_id) REFERENCES participante_ocorrencia(id)
+);
+
 CREATE TABLE alerta_preventivo (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
   ocorrencia_id         INT,
@@ -436,6 +484,105 @@ CREATE TABLE alerta_preventivo (
   nivel                 VARCHAR(50),
   data_emissao          DATETIME,
   FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id)
+);
+
+CREATE TABLE chamada (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  telefone_id           INT,
+  agencia_id            INT,
+  ocorrencia_id         INT,
+  data_hora             DATETIME,
+  descricao             TEXT,
+  FOREIGN KEY (telefone_id) REFERENCES telefone(id),
+  FOREIGN KEY (agencia_id) REFERENCES agencia(id),
+  FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id)
+);
+
+CREATE TABLE operacao (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  nome                  VARCHAR(255),
+  descricao             TEXT,
+  data_inicio           DATETIME,
+  data_fim              DATETIME
+);
+
+CREATE TABLE operacao_unidade (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  operacao_id           INT           NOT NULL,
+  unidade_id            INT           NOT NULL,
+  papel                 VARCHAR(255),
+  FOREIGN KEY (operacao_id) REFERENCES operacao(id),
+  FOREIGN KEY (unidade_id) REFERENCES unidade(id)
+);
+
+CREATE TABLE operacao_ocorrencia (
+  operacao_id           INT,
+  ocorrencia_id         INT,
+  PRIMARY KEY (operacao_id, ocorrencia_id),
+  FOREIGN KEY (operacao_id) REFERENCES operacao(id),
+  FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id)
+);
+
+CREATE TABLE operacao_apreensao (
+  operacao_id           INT,
+  apreensao_id          INT,
+  PRIMARY KEY (operacao_id, apreensao_id),
+  FOREIGN KEY (operacao_id) REFERENCES operacao(id),
+  FOREIGN KEY (apreensao_id) REFERENCES apreensao(id)
+);
+
+CREATE TABLE pertences (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  operacao_id           INT,
+  pessoa_id             INT,
+  descricao             TEXT,
+  valor_estimado        DECIMAL(12,2),
+  apreendido            BOOLEAN       DEFAULT FALSE,
+  FOREIGN KEY (operacao_id) REFERENCES operacao(id),
+  FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
+);
+
+CREATE TABLE escala_plantao (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  operacao_id           INT,
+  data_inicio           DATETIME,
+  data_fim              DATETIME,
+  papel                 VARCHAR(255),
+  FOREIGN KEY (operacao_id) REFERENCES operacao(id)
+);
+
+CREATE TABLE horario_trabalho (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  escala_plantao_id     INT,
+  dia_semana            ENUM('DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'),
+  hora_inicio           TIME,
+  hora_fim              TIME,
+  FOREIGN KEY (escala_plantao_id) REFERENCES escala_plantao(id)
+);
+
+CREATE TABLE escala_horario (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  escala_id             INT,
+  horario_trabalho_id   INT,
+  FOREIGN KEY (escala_id) REFERENCES escala_plantao(id),
+  FOREIGN KEY (horario_trabalho_id) REFERENCES horario_trabalho(id)
+);
+
+CREATE TABLE horario_turno (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  nome                  VARCHAR(255),
+  hora_inicio           TIME,
+  hora_fim              TIME
+);
+
+CREATE TABLE meta_operacional (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  operacao_id           INT,
+  nome                  VARCHAR(255),
+  descricao             TEXT,
+  periodo_inicio        DATE,
+  periodo_fim           DATE,
+  FOREIGN KEY (operacao_id) REFERENCES operacao(id)
 );
 
 CREATE TABLE investigacao (
@@ -480,7 +627,7 @@ CREATE TABLE inquerito_policial (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
   investigacao_id       INT,
   ocorrencia_id         INT,
-  numero_protocolo      VARCHAR(255),
+  numero_protocolo      VARCHAR(50),
   data_abertura         DATE,
   data_encerramento     DATE,
   FOREIGN KEY (investigacao_id) REFERENCES investigacao(id),
@@ -549,7 +696,7 @@ CREATE TABLE laudo_evidencia (
 
 CREATE TABLE vestigio (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  tipo                  VARCHAR(255),
+  tipo                  VARCHAR(50),
   descricao             TEXT
 );
 
@@ -579,51 +726,62 @@ CREATE TABLE denuncia_investigacao (
   FOREIGN KEY (investigacao_id) REFERENCES investigacao(id)
 );
 
---- XXX
---- XXX
---- XXX
-
 CREATE TABLE boletim (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
   ocorrencia_id         INT,
-  numero_boletim        VARCHAR(255),
+  numero                VARCHAR(50)   UNIQUE,
   texto                 TEXT,
   data_registro         DATETIME,
   FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id)
 );
 
+CREATE TABLE processo_status (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  nome                  VARCHAR(50)   UNIQUE NOT NULL
+);
+
 CREATE TABLE processo (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  agencia_id            INT           NOT NULL,
-  numero                VARCHAR(255) UNIQUE,
+  agencia_id            INT,
+  orgao_fiscal_id       INT,
+  contra_pessoa_id      INT,
+  status_id             INT,
+  numero                VARCHAR(50)   UNIQUE,
   tipo                  VARCHAR(255),
-  status                VARCHAR(50),
   data_inicio           DATE,
-  FOREIGN KEY (agencia_id) REFERENCES agencia(id)
+  FOREIGN KEY (agencia_id) REFERENCES agencia(id),
+  FOREIGN KEY (orgao_fiscal_id) REFERENCES orgao_fiscal(id),
+  FOREIGN KEY (contra_pessoa_id) REFERENCES pessoa(id),
+  FOREIGN KEY (status_id) REFERENCES processo_status(id)
 );
 
-CREATE TABLE mandado (
+CREATE TABLE processo_denuncia (
+  processo_id           INT,
+  denuncia_id           INT,
+  PRIMARY KEY (processo_id, denuncia_id),
+  FOREIGN KEY (processo_id) REFERENCES processo(id),
+  FOREIGN KEY (denuncia_id) REFERENCES denuncia(id)
+);
+
+CREATE TABLE intimacao (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  processo_id           INT           NOT NULL,
+  pessoa_id             INT           NOT NULL,
+  data_envio            DATE          NOT NULL,
+  data_cumprimento      DATE,
+  meio                  VARCHAR(50),
+  FOREIGN KEY (processo_id) REFERENCES processo(id),
+  FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
+);
+
+CREATE TABLE sentenca (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
   processo_id           INT,
-  tipo                  VARCHAR(255),
-  numero                VARCHAR(255),
-  data_emissao          DATE,
-  data_validade         DATE,
+  numero                VARCHAR(50)   UNIQUE,
+  texto                 TEXT,
+  pena                  TEXT,
+  data_sentenca         DATE,
   FOREIGN KEY (processo_id) REFERENCES processo(id)
-);
-
-CREATE TABLE prisao (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  pessoa_id             INT,
-  ocorrencia_id         INT,
-  mandado_id            INT,
-  prisao_endereco_id    INT,
-  data_prisao           DATETIME,
-  custodia              BOOLEAN       DEFAULT TRUE,
-  FOREIGN KEY (pessoa_id) REFERENCES pessoa(id),
-  FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id),
-  FOREIGN KEY (mandado_id) REFERENCES mandado(id),
-  FOREIGN KEY (prisao_endereco_id) REFERENCES endereco(id)
 );
 
 CREATE TABLE sistema_penitenciario (
@@ -634,46 +792,56 @@ CREATE TABLE sistema_penitenciario (
   FOREIGN KEY (endereco_id) REFERENCES endereco(id)
 );
 
-CREATE TABLE sentenca (
+CREATE TABLE prisao (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
+  sistema_id            INT,
+  sentenca_id           INT,
+  data_prisao           DATETIME,
+  custodia              BOOLEAN       DEFAULT TRUE,
+  FOREIGN KEY (sistema_id) REFERENCES sistema_penitenciario(id),
+  FOREIGN KEY (sentenca_id) REFERENCES sentenca(id)
+);
+
+CREATE TABLE historico_criminal (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  pessoa_id             INT           NOT NULL,
+  crime_id              INT,
   processo_id           INT,
-  autor_id              INT,
-  texto                 TEXT,
-  data_sentenca         DATE,
-  pena                  VARCHAR(255),
-  FOREIGN KEY (processo_id) REFERENCES processo(id),
-  FOREIGN KEY (autor_id) REFERENCES pessoa(id)
+  descricao             TEXT,
+  data_ocorrencia       DATE,
+  status                VARCHAR(50),
+  FOREIGN KEY (pessoa_id) REFERENCES pessoa(id),
+  FOREIGN KEY (crime_id) REFERENCES crime(id),
+  FOREIGN KEY (processo_id) REFERENCES processo(id)
 );
 
 CREATE TABLE habeas_corpus (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  processo_id           INT,
+  prisao_id             INT,
   requerente_id         INT,
   juiz_id               INT,
   data_peticao          DATE,
   status                VARCHAR(50),
-  FOREIGN KEY (processo_id) REFERENCES processo(id),
+  FOREIGN KEY (prisao_id) REFERENCES prisao(id),
   FOREIGN KEY (requerente_id) REFERENCES pessoa(id),
   FOREIGN KEY (juiz_id) REFERENCES pessoa(id)
 );
 
 CREATE TABLE fianca (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  processo_id           INT,
+  prisao_id             INT,
   pagante_id            INT,
   valor                 DECIMAL(12,2),
   data_pagamento        DATE,
-  FOREIGN KEY (processo_id) REFERENCES processo(id),
+  FOREIGN KEY (prisao_id) REFERENCES prisao(id),
   FOREIGN KEY (pagante_id) REFERENCES pessoa(id)
 );
 
-CREATE TABLE protecao_testemunha (
+CREATE TABLE mandado (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
+  processo_id           INT,
   pessoa_id             INT,
-  nivel_protecao        VARCHAR(255),
-  data_inicio           DATE,
-  data_fim              DATE,
-  descricao             TEXT,
+  FOREIGN KEY (processo_id) REFERENCES processo(id),
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
 
@@ -703,148 +871,21 @@ CREATE TABLE medida_protetiva (
   FOREIGN KEY (agressor_id) REFERENCES agressor(id)
 );
 
-CREATE TABLE alocacao_recursos (
+CREATE TABLE protecao_testemunha (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  unidade_id            INT,
-  tipo                  VARCHAR(255),
-  data_hora             DATETIME,
-  descricao             TEXT,
-  FOREIGN KEY (unidade_id) REFERENCES unidade(id)
-);
-
-CREATE TABLE operacao (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  nome                  VARCHAR(255),
-  descricao             TEXT,
-  data_inicio           DATETIME,
-  data_fim              DATETIME
-);
-
-CREATE TABLE operacao_unidade (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  operacao_id           INT           NOT NULL,
-  unidade_id            INT           NOT NULL,
-  papel                 VARCHAR(255),
-  FOREIGN KEY (operacao_id) REFERENCES operacao(id),
-  FOREIGN KEY (unidade_id) REFERENCES unidade(id)
-);
-
-CREATE TABLE operacao_ocorrencia (
-  operacao_id           INT,
-  ocorrencia_id         INT,
-  PRIMARY KEY (operacao_id, ocorrencia_id),
-  FOREIGN KEY (operacao_id) REFERENCES operacao(id),
-  FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id)
-);
-
-CREATE TABLE pertences (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  operacao_id           INT,
   pessoa_id             INT,
+  nivel_protecao        VARCHAR(255),
+  data_inicio           DATE,
+  data_fim              DATE,
   descricao             TEXT,
-  valor_estimado        DECIMAL(12,2),
-  apreendido            BOOLEAN       DEFAULT FALSE,
-  FOREIGN KEY (operacao_id) REFERENCES operacao(id),
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
-);
-
-CREATE TABLE escala_plantao (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  operacao_id           INT,
-  data_inicio           DATETIME,
-  data_fim              DATETIME,
-  papel                 VARCHAR(255),
-  FOREIGN KEY (operacao_id) REFERENCES operacao(id)
-);
-
-CREATE TABLE horario_trabalho (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  escala_plantao_id     INT,
-  dia_semana            ENUM('DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'),
-  hora_inicio           TIME,
-  hora_fim              TIME,
-  FOREIGN KEY (escala_plantao_id) REFERENCES escala_plantao(id)
-);
-
-CREATE TABLE meta_operacional (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  unidade_id            INT,
-  nome                  VARCHAR(255),
-  descricao             TEXT,
-  periodo_inicio        DATE,
-  periodo_fim           DATE,
-  FOREIGN KEY (unidade_id) REFERENCES unidade(id)
-);
-
-CREATE TABLE ocorrencia_evidencia (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  ocorrencia_id         INT,
-  evidencia_id          INT,
-  descricao             TEXT,
-  FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id),
-  FOREIGN KEY (evidencia_id) REFERENCES evidencia(id)
-);
-
-CREATE TABLE evidencia_digital_link (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  evidencia_digital_id  INT,
-  url                   VARCHAR(500),
-  armazenado_em         VARCHAR(255),
-  FOREIGN KEY (evidencia_digital_id) REFERENCES evidencia_digital(id)
-);
-
-CREATE TABLE processo_mandado (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  processo_id           INT,
-  mandado_id            INT,
-  FOREIGN KEY (processo_id) REFERENCES processo(id),
-  FOREIGN KEY (mandado_id) REFERENCES mandado(id)
-);
-
-CREATE TABLE processo_sentenca (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  processo_id           INT,
-  sentenca_id           INT,
-  FOREIGN KEY (processo_id) REFERENCES processo(id),
-  FOREIGN KEY (sentenca_id) REFERENCES sentenca(id)
-);
-
-CREATE TABLE processo_prisao (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  processo_id           INT,
-  prisao_id             INT,
-  FOREIGN KEY (processo_id) REFERENCES processo(id),
-  FOREIGN KEY (prisao_id) REFERENCES prisao(id)
-);
-
-CREATE TABLE investigacao_inquerito (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  investigacao_id       INT,
-  inquerito_id          INT,
-  FOREIGN KEY (investigacao_id) REFERENCES investigacao(id),
-  FOREIGN KEY (inquerito_id) REFERENCES inquerito_policial(id)
-);
-
-CREATE TABLE escala_horario (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  escala_id             INT,
-  horario_trabalho_id   INT,
-  FOREIGN KEY (escala_id) REFERENCES escala_plantao(id),
-  FOREIGN KEY (horario_trabalho_id) REFERENCES horario_trabalho(id)
-);
-
-CREATE TABLE horario_turno (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  nome                  VARCHAR(255),
-  hora_inicio           TIME,
-  hora_fim              TIME
 );
 
 CREATE TABLE sinasp_usuario (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
   profissional_id       INT,
-  login                 VARCHAR(255) UNIQUE NOT NULL,
-  senha_hash            VARCHAR(255) NOT NULL,
+  login                 VARCHAR(255)  UNIQUE NOT NULL,
+  senha_hash            VARCHAR(255)  NOT NULL,
   nome_completo         VARCHAR(255),
   email                 VARCHAR(255),
   FOREIGN KEY (profissional_id) REFERENCES pessoa_profissao(id)
