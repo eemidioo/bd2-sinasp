@@ -43,7 +43,7 @@ CREATE TABLE endereco (
 -- 'FIXO', 'CELULAR', 'COMERCIAL', 'RECADO', ...
 CREATE TABLE telefone_tipo (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  nome                  VARCHAR(255)  UNIQUE NOT NULL
+  nome                  VARCHAR(50)   UNIQUE NOT NULL
 );
 
 CREATE TABLE telefone (
@@ -91,14 +91,14 @@ CREATE TABLE condutor (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
   pessoa_id             INT           UNIQUE NOT NULL,
   cnh                   VARCHAR(50)   UNIQUE,
-  validade              DATE,
+  cnh_validade          DATE,
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
 
 -- 'A', 'B', 'C', 'D', 'E', ...
 CREATE TABLE  categoria_cnh (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  nome                  VARCHAR(50)   NOT NULL
+  nome                  VARCHAR(50)   UNIQUE NOT NULL
 );
 
 CREATE TABLE condutor_categoria (
@@ -254,7 +254,7 @@ CREATE TABLE viatura_status (
 
 CREATE TABLE viatura (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  veiculo_id            INT           NOT NULL,
+  veiculo_id            INT           UNIQUE NOT NULL,
   status_id             INT,
   FOREIGN KEY (veiculo_id) REFERENCES veiculo(id),
   FOREIGN KEY (status_id) REFERENCES viatura_status(id)
@@ -278,9 +278,11 @@ CREATE TABLE arma_tipo (
 
 CREATE TABLE arma (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
+  equipamento_id        INT           UNIQUE NOT NULL,
   tipo_id               INT,
   numero_serie          VARCHAR(255)  UNIQUE,
   descricao             TEXT,
+  FOREIGN KEY (equipamento_id) REFERENCES equipamento(id),
   FOREIGN KEY (tipo_id) REFERENCES arma_tipo(id)
 );
 
@@ -424,6 +426,7 @@ CREATE TABLE criminoso_organizado (
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
 
+-- 'ACIDENTE', 'FURTO', 'INCENDIO', ...
 CREATE TABLE ocorrencia_tipo (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
   nome                  VARCHAR(50)   UNIQUE NOT NULL
@@ -560,29 +563,20 @@ CREATE TABLE horario_trabalho (
   FOREIGN KEY (escala_plantao_id) REFERENCES escala_plantao(id)
 );
 
-CREATE TABLE escala_horario (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  escala_id             INT,
-  horario_trabalho_id   INT,
-  FOREIGN KEY (escala_id) REFERENCES escala_plantao(id),
-  FOREIGN KEY (horario_trabalho_id) REFERENCES horario_trabalho(id)
-);
-
-CREATE TABLE horario_turno (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  nome                  VARCHAR(255),
-  hora_inicio           TIME,
-  hora_fim              TIME
-);
-
 CREATE TABLE meta_operacional (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  operacao_id           INT,
   nome                  VARCHAR(255),
   descricao             TEXT,
   periodo_inicio        DATE,
-  periodo_fim           DATE,
-  FOREIGN KEY (operacao_id) REFERENCES operacao(id)
+  periodo_fim           DATE
+);
+
+CREATE TABLE operacao_meta_operacional (
+  operacao_id           INT,
+  meta_id               INT,
+  PRIMARY KEY (operacao_id, meta_id),
+  FOREIGN KEY (operacao_id) REFERENCES operacao(id),
+  FOREIGN KEY (meta_id) REFERENCES meta_operacional(id)
 );
 
 CREATE TABLE investigacao (
@@ -648,11 +642,17 @@ CREATE TABLE evidencia (
 CREATE TABLE evidencia_digital (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
   evidencia_id          INT,
-  arquivo_referencia    TEXT,
-  hash                  VARCHAR(255),
-  plataforma            VARCHAR(255),
   descricao             TEXT,
   FOREIGN KEY (evidencia_id) REFERENCES evidencia(id)
+);
+
+CREATE TABLE evidencia_digital_arquivo (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  evidencia_dig_id      INT,
+  hash                  VARCHAR(255),
+  plataforma            VARCHAR(255),
+  conteudo              TEXT,
+  FOREIGN KEY (evidencia_dig_id) REFERENCES evidencia_digital(id)
 );
 
 CREATE TABLE monitoramento_eletronico (
@@ -701,8 +701,8 @@ CREATE TABLE vestigio (
 );
 
 CREATE TABLE evidencia_vestigio (
-  evidencia_id INT,
-  vestigio_id INT,
+  evidencia_id          INT,
+  vestigio_id           INT,
   PRIMARY KEY (evidencia_id, vestigio_id),
   FOREIGN KEY (evidencia_id) REFERENCES evidencia(id),
   FOREIGN KEY (vestigio_id) REFERENCES vestigio(id)
@@ -735,6 +735,7 @@ CREATE TABLE boletim (
   FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id)
 );
 
+-- 'EM_ANALISE', 'EM_ANDAMENTO', 'CONCLUIDO', 'ARQUIVADO', 'REJEITADO', ...
 CREATE TABLE processo_status (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
   nome                  VARCHAR(50)   UNIQUE NOT NULL
