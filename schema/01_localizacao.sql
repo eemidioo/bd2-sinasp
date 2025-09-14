@@ -1,0 +1,33 @@
+CREATE TABLE uf (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  sigla CHAR(2) UNIQUE NOT NULL,
+  nome VARCHAR(255) NOT NULL
+);
+CREATE TABLE cidade (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  uf_id INT NOT NULL,
+  nome VARCHAR(255) NOT NULL,
+  FOREIGN KEY (uf_id) REFERENCES uf(id)
+);
+CREATE TABLE bairro (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  cidade_id INT NOT NULL,
+  nome VARCHAR(255) NOT NULL,
+  FOREIGN KEY (cidade_id) REFERENCES cidade(id)
+);
+CREATE TABLE rua (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  bairro_id INT,
+  cep VARCHAR(20),
+  nome VARCHAR(255) NOT NULL,
+  FOREIGN KEY (bairro_id) REFERENCES bairro(id)
+);
+CREATE TABLE endereco (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  rua_id INT,
+  numero VARCHAR(20),
+  complemento VARCHAR(255),
+  latitude DECIMAL(10, 7),
+  longitude DECIMAL(10, 7),
+  FOREIGN KEY (rua_id) REFERENCES rua(id)
+);
