@@ -1,9 +1,12 @@
+-- Infração / Crime
+
 CREATE TABLE orgao_fiscal (
   id INT AUTO_INCREMENT PRIMARY KEY,
   unidade_id INT,
   nome VARCHAR(255) NOT NULL,
   FOREIGN KEY (unidade_id) REFERENCES unidade(id)
 );
+
 CREATE TABLE infracao (
   id INT AUTO_INCREMENT PRIMARY KEY,
   condutor_id INT NOT NULL,
@@ -16,6 +19,7 @@ CREATE TABLE infracao (
   FOREIGN KEY (veiculo_id) REFERENCES veiculo(id),
   FOREIGN KEY (orgao_fiscal_id) REFERENCES orgao_fiscal(id)
 );
+
 CREATE TABLE multa (
   id INT AUTO_INCREMENT PRIMARY KEY,
   infracao_id INT,
@@ -26,6 +30,7 @@ CREATE TABLE multa (
   status VARCHAR(50),
   FOREIGN KEY (infracao_id) REFERENCES infracao(id)
 );
+
 CREATE TABLE recurso_infracao (
   id INT AUTO_INCREMENT PRIMARY KEY,
   infracao_id INT,
@@ -36,11 +41,13 @@ CREATE TABLE recurso_infracao (
   FOREIGN KEY (infracao_id) REFERENCES infracao(id),
   FOREIGN KEY (requerente_id) REFERENCES pessoa(id)
 );
+
 CREATE TABLE crime_tipo (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(255) UNIQUE NOT NULL,
   codigo_legal VARCHAR(255)
 );
+
 CREATE TABLE crime (
   id INT AUTO_INCREMENT PRIMARY KEY,
   tipo_id INT,
@@ -50,12 +57,14 @@ CREATE TABLE crime (
   FOREIGN KEY (tipo_id) REFERENCES crime_tipo(id),
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
+
 CREATE TABLE organizacao_criminosa (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(255),
   descricao TEXT,
   grau_organizacao VARCHAR(255)
 );
+
 CREATE TABLE analise_vinculo_criminoso (
   id INT AUTO_INCREMENT PRIMARY KEY,
   pessoa_id INT NOT NULL,
@@ -65,6 +74,7 @@ CREATE TABLE analise_vinculo_criminoso (
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id),
   FOREIGN KEY (org_criminosa_id) REFERENCES organizacao_criminosa(id)
 );
+
 CREATE TABLE criminoso_organizado (
   id INT AUTO_INCREMENT PRIMARY KEY,
   org_criminosa_id INT,

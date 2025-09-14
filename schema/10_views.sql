@@ -1,3 +1,5 @@
+-- Views
+
 CREATE VIEW vw_pessoa_detalhes AS
 SELECT p.id AS pessoa_id,
   p.nome AS nome_pessoa,

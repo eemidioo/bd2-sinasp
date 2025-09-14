@@ -1,7 +1,10 @@
+-- Pessoa
+
 CREATE TABLE telefone_tipo (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) UNIQUE NOT NULL
 );
+
 CREATE TABLE telefone (
   id INT AUTO_INCREMENT PRIMARY KEY,
   tipo_id INT,
@@ -9,10 +12,12 @@ CREATE TABLE telefone (
   descricao VARCHAR(255),
   FOREIGN KEY (tipo_id) REFERENCES telefone_tipo(id)
 );
+
 CREATE TABLE pessoa_sexo (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) UNIQUE NOT NULL
 );
+
 CREATE TABLE pessoa (
   id INT AUTO_INCREMENT PRIMARY KEY,
   sexo_id INT,
@@ -21,6 +26,7 @@ CREATE TABLE pessoa (
   descricao TEXT,
   FOREIGN KEY (sexo_id) REFERENCES pessoa_sexo(id)
 );
+
 CREATE TABLE pessoa_endereco (
   pessoa_id INT,
   endereco_id INT,
@@ -30,6 +36,7 @@ CREATE TABLE pessoa_endereco (
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id),
   FOREIGN KEY (endereco_id) REFERENCES endereco(id)
 );
+
 CREATE TABLE pessoa_telefone (
   pessoa_id INT,
   telefone_id INT,
@@ -37,6 +44,7 @@ CREATE TABLE pessoa_telefone (
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id),
   FOREIGN KEY (telefone_id) REFERENCES telefone(id)
 );
+
 CREATE TABLE condutor (
   id INT AUTO_INCREMENT PRIMARY KEY,
   pessoa_id INT UNIQUE NOT NULL,
@@ -44,10 +52,12 @@ CREATE TABLE condutor (
   cnh_validade DATE,
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
+
 CREATE TABLE categoria_cnh (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) UNIQUE NOT NULL
 );
+
 CREATE TABLE condutor_categoria (
   condutor_id INT,
   categoria_cnh_id INT,
@@ -55,6 +65,7 @@ CREATE TABLE condutor_categoria (
   FOREIGN KEY (condutor_id) REFERENCES condutor(id),
   FOREIGN KEY (categoria_cnh_id) REFERENCES categoria_cnh(id)
 );
+
 CREATE TABLE cidadao (
   id INT AUTO_INCREMENT PRIMARY KEY,
   pessoa_id INT UNIQUE NOT NULL,

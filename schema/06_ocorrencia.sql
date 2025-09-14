@@ -1,7 +1,10 @@
+-- Ocorrência / Operação
+
 CREATE TABLE ocorrencia_tipo (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) UNIQUE NOT NULL
 );
+
 CREATE TABLE ocorrencia (
   id INT AUTO_INCREMENT PRIMARY KEY,
   tipo_id INT,
@@ -14,6 +17,7 @@ CREATE TABLE ocorrencia (
   FOREIGN KEY (endereco_id) REFERENCES endereco(id),
   FOREIGN KEY (unidade_id) REFERENCES unidade(id)
 );
+
 CREATE TABLE ocorrencia_crime (
   ocorrencia_id INT,
   crime_id INT,
@@ -21,10 +25,12 @@ CREATE TABLE ocorrencia_crime (
   FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id),
   FOREIGN KEY (crime_id) REFERENCES crime(id)
 );
+
 CREATE TABLE participante_ocorrencia_papel (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) UNIQUE NOT NULL
 );
+
 CREATE TABLE participante_ocorrencia (
   id INT AUTO_INCREMENT PRIMARY KEY,
   ocorrencia_id INT,
@@ -35,6 +41,7 @@ CREATE TABLE participante_ocorrencia (
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id),
   FOREIGN KEY (papel_id) REFERENCES participante_ocorrencia_papel(id)
 );
+
 CREATE TABLE ocorrencia_depoimento (
   id INT AUTO_INCREMENT PRIMARY KEY,
   ocorrencia_id INT,
@@ -44,6 +51,7 @@ CREATE TABLE ocorrencia_depoimento (
   FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id),
   FOREIGN KEY (participante_id) REFERENCES participante_ocorrencia(id)
 );
+
 CREATE TABLE alerta_preventivo (
   id INT AUTO_INCREMENT PRIMARY KEY,
   ocorrencia_id INT,
@@ -52,6 +60,7 @@ CREATE TABLE alerta_preventivo (
   data_emissao DATETIME,
   FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id)
 );
+
 CREATE TABLE chamada (
   id INT AUTO_INCREMENT PRIMARY KEY,
   telefone_id INT,
@@ -63,6 +72,7 @@ CREATE TABLE chamada (
   FOREIGN KEY (agencia_id) REFERENCES agencia(id),
   FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id)
 );
+
 CREATE TABLE operacao (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(255),
@@ -70,6 +80,7 @@ CREATE TABLE operacao (
   data_inicio DATETIME,
   data_fim DATETIME
 );
+
 CREATE TABLE operacao_unidade (
   id INT AUTO_INCREMENT PRIMARY KEY,
   operacao_id INT NOT NULL,
@@ -78,6 +89,7 @@ CREATE TABLE operacao_unidade (
   FOREIGN KEY (operacao_id) REFERENCES operacao(id),
   FOREIGN KEY (unidade_id) REFERENCES unidade(id)
 );
+
 CREATE TABLE operacao_ocorrencia (
   operacao_id INT,
   ocorrencia_id INT,
@@ -85,6 +97,7 @@ CREATE TABLE operacao_ocorrencia (
   FOREIGN KEY (operacao_id) REFERENCES operacao(id),
   FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id)
 );
+
 CREATE TABLE operacao_apreensao (
   operacao_id INT,
   apreensao_id INT,
@@ -92,6 +105,7 @@ CREATE TABLE operacao_apreensao (
   FOREIGN KEY (operacao_id) REFERENCES operacao(id),
   FOREIGN KEY (apreensao_id) REFERENCES apreensao(id)
 );
+
 CREATE TABLE pertences (
   id INT AUTO_INCREMENT PRIMARY KEY,
   operacao_id INT,
@@ -102,6 +116,7 @@ CREATE TABLE pertences (
   FOREIGN KEY (operacao_id) REFERENCES operacao(id),
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
+
 CREATE TABLE escala_plantao (
   id INT AUTO_INCREMENT PRIMARY KEY,
   operacao_id INT,
@@ -110,6 +125,7 @@ CREATE TABLE escala_plantao (
   papel VARCHAR(255),
   FOREIGN KEY (operacao_id) REFERENCES operacao(id)
 );
+
 CREATE TABLE horario_trabalho (
   id INT AUTO_INCREMENT PRIMARY KEY,
   escala_plantao_id INT,
@@ -118,6 +134,7 @@ CREATE TABLE horario_trabalho (
   hora_fim TIME,
   FOREIGN KEY (escala_plantao_id) REFERENCES escala_plantao(id)
 );
+
 CREATE TABLE meta_operacional (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(255),
@@ -125,6 +142,7 @@ CREATE TABLE meta_operacional (
   periodo_inicio DATE,
   periodo_fim DATE
 );
+
 CREATE TABLE operacao_meta_operacional (
   operacao_id INT,
   meta_id INT,

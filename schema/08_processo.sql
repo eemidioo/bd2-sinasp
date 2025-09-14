@@ -1,7 +1,10 @@
+-- Processo
+
 CREATE TABLE processo_status (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) UNIQUE NOT NULL
 );
+
 CREATE TABLE processo (
   id INT AUTO_INCREMENT PRIMARY KEY,
   agencia_id INT,
@@ -16,6 +19,7 @@ CREATE TABLE processo (
   FOREIGN KEY (contra_pessoa_id) REFERENCES pessoa(id),
   FOREIGN KEY (status_id) REFERENCES processo_status(id)
 );
+
 CREATE TABLE processo_denuncia (
   processo_id INT,
   denuncia_id INT,
@@ -23,6 +27,7 @@ CREATE TABLE processo_denuncia (
   FOREIGN KEY (processo_id) REFERENCES processo(id),
   FOREIGN KEY (denuncia_id) REFERENCES denuncia(id)
 );
+
 CREATE TABLE intimacao (
   id INT AUTO_INCREMENT PRIMARY KEY,
   processo_id INT NOT NULL,
@@ -33,6 +38,7 @@ CREATE TABLE intimacao (
   FOREIGN KEY (processo_id) REFERENCES processo(id),
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
+
 CREATE TABLE sentenca (
   id INT AUTO_INCREMENT PRIMARY KEY,
   processo_id INT,
@@ -42,6 +48,7 @@ CREATE TABLE sentenca (
   data_sentenca DATE,
   FOREIGN KEY (processo_id) REFERENCES processo(id)
 );
+
 CREATE TABLE sistema_penitenciario (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(255),
@@ -49,6 +56,7 @@ CREATE TABLE sistema_penitenciario (
   capacidade INT,
   FOREIGN KEY (endereco_id) REFERENCES endereco(id)
 );
+
 CREATE TABLE prisao (
   id INT AUTO_INCREMENT PRIMARY KEY,
   sistema_id INT,
@@ -58,6 +66,7 @@ CREATE TABLE prisao (
   FOREIGN KEY (sistema_id) REFERENCES sistema_penitenciario(id),
   FOREIGN KEY (sentenca_id) REFERENCES sentenca(id)
 );
+
 CREATE TABLE historico_criminal (
   id INT AUTO_INCREMENT PRIMARY KEY,
   pessoa_id INT NOT NULL,
@@ -70,6 +79,7 @@ CREATE TABLE historico_criminal (
   FOREIGN KEY (crime_id) REFERENCES crime(id),
   FOREIGN KEY (processo_id) REFERENCES processo(id)
 );
+
 CREATE TABLE habeas_corpus (
   id INT AUTO_INCREMENT PRIMARY KEY,
   prisao_id INT,
@@ -81,6 +91,7 @@ CREATE TABLE habeas_corpus (
   FOREIGN KEY (requerente_id) REFERENCES pessoa(id),
   FOREIGN KEY (juiz_id) REFERENCES pessoa(id)
 );
+
 CREATE TABLE fianca (
   id INT AUTO_INCREMENT PRIMARY KEY,
   prisao_id INT,
@@ -90,6 +101,7 @@ CREATE TABLE fianca (
   FOREIGN KEY (prisao_id) REFERENCES prisao(id),
   FOREIGN KEY (pagante_id) REFERENCES pessoa(id)
 );
+
 CREATE TABLE mandado (
   id INT AUTO_INCREMENT PRIMARY KEY,
   processo_id INT,
@@ -97,18 +109,21 @@ CREATE TABLE mandado (
   FOREIGN KEY (processo_id) REFERENCES processo(id),
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
+
 CREATE TABLE vitima_violencia (
   id INT AUTO_INCREMENT PRIMARY KEY,
   pessoa_id INT UNIQUE NOT NULL,
   descricao TEXT,
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
+
 CREATE TABLE agressor (
   id INT AUTO_INCREMENT PRIMARY KEY,
   pessoa_id INT UNIQUE NOT NULL,
   descricao TEXT,
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
+
 CREATE TABLE medida_protetiva (
   id INT AUTO_INCREMENT PRIMARY KEY,
   vitima_id INT NOT NULL,
@@ -120,6 +135,7 @@ CREATE TABLE medida_protetiva (
   FOREIGN KEY (vitima_id) REFERENCES vitima_violencia(id),
   FOREIGN KEY (agressor_id) REFERENCES agressor(id)
 );
+
 CREATE TABLE protecao_testemunha (
   id INT AUTO_INCREMENT PRIMARY KEY,
   pessoa_id INT,

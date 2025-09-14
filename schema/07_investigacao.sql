@@ -1,3 +1,5 @@
+-- Investigação
+
 CREATE TABLE investigacao (
   id INT AUTO_INCREMENT PRIMARY KEY,
   agencia_id INT NOT NULL,
@@ -7,6 +9,7 @@ CREATE TABLE investigacao (
   data_encerramento DATE,
   FOREIGN KEY (agencia_id) REFERENCES agencia(id)
 );
+
 CREATE TABLE investigacao_ocorrencia (
   investigacao_id INT,
   ocorrencia_id INT,
@@ -14,6 +17,7 @@ CREATE TABLE investigacao_ocorrencia (
   FOREIGN KEY (investigacao_id) REFERENCES investigacao(id),
   FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id)
 );
+
 CREATE TABLE investigacao_pessoa (
   investigacao_id INT,
   pessoa_id INT,
@@ -22,6 +26,7 @@ CREATE TABLE investigacao_pessoa (
   FOREIGN KEY (investigacao_id) REFERENCES investigacao(id),
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
+
 CREATE TABLE laudo (
   id INT AUTO_INCREMENT PRIMARY KEY,
   investigacao_id INT,
@@ -32,6 +37,7 @@ CREATE TABLE laudo (
   FOREIGN KEY (investigacao_id) REFERENCES investigacao(id),
   FOREIGN KEY (perito_id) REFERENCES pessoa_profissao(id)
 );
+
 CREATE TABLE inquerito_policial (
   id INT AUTO_INCREMENT PRIMARY KEY,
   investigacao_id INT,
@@ -42,6 +48,7 @@ CREATE TABLE inquerito_policial (
   FOREIGN KEY (investigacao_id) REFERENCES investigacao(id),
   FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id)
 );
+
 CREATE TABLE evidencia (
   id INT AUTO_INCREMENT PRIMARY KEY,
   ocorrencia_id INT,
@@ -52,12 +59,14 @@ CREATE TABLE evidencia (
   FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id),
   FOREIGN KEY (coleta_endereco_id) REFERENCES endereco(id)
 );
+
 CREATE TABLE evidencia_digital (
   id INT AUTO_INCREMENT PRIMARY KEY,
   evidencia_id INT,
   descricao TEXT,
   FOREIGN KEY (evidencia_id) REFERENCES evidencia(id)
 );
+
 CREATE TABLE evidencia_digital_arquivo (
   id INT AUTO_INCREMENT PRIMARY KEY,
   evidencia_dig_id INT,
@@ -66,6 +75,7 @@ CREATE TABLE evidencia_digital_arquivo (
   conteudo TEXT,
   FOREIGN KEY (evidencia_dig_id) REFERENCES evidencia_digital(id)
 );
+
 CREATE TABLE monitoramento_eletronico (
   id INT AUTO_INCREMENT PRIMARY KEY,
   pessoa_id INT,
@@ -75,6 +85,7 @@ CREATE TABLE monitoramento_eletronico (
   dispositivo_info TEXT,
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
+
 CREATE TABLE incidente_cibernetico (
   id INT AUTO_INCREMENT PRIMARY KEY,
   ocorrencia_id INT,
@@ -86,6 +97,7 @@ CREATE TABLE incidente_cibernetico (
   FOREIGN KEY (ocorrencia_id) REFERENCES ocorrencia(id),
   FOREIGN KEY (monit_id) REFERENCES monitoramento_eletronico(id)
 );
+
 CREATE TABLE incidente_cibernetico_evidencia (
   incidente_id INT,
   evidencia_id INT,
@@ -93,6 +105,7 @@ CREATE TABLE incidente_cibernetico_evidencia (
   FOREIGN KEY (incidente_id) REFERENCES incidente_cibernetico(id),
   FOREIGN KEY (evidencia_id) REFERENCES evidencia(id)
 );
+
 CREATE TABLE laudo_evidencia (
   id INT AUTO_INCREMENT PRIMARY KEY,
   laudo_id INT,
@@ -101,11 +114,13 @@ CREATE TABLE laudo_evidencia (
   FOREIGN KEY (laudo_id) REFERENCES laudo(id),
   FOREIGN KEY (evidencia_id) REFERENCES evidencia(id)
 );
+
 CREATE TABLE vestigio (
   id INT AUTO_INCREMENT PRIMARY KEY,
   tipo VARCHAR(50),
   descricao TEXT
 );
+
 CREATE TABLE evidencia_vestigio (
   evidencia_id INT,
   vestigio_id INT,
@@ -113,6 +128,7 @@ CREATE TABLE evidencia_vestigio (
   FOREIGN KEY (evidencia_id) REFERENCES evidencia(id),
   FOREIGN KEY (vestigio_id) REFERENCES vestigio(id)
 );
+
 CREATE TABLE denuncia (
   id INT AUTO_INCREMENT PRIMARY KEY,
   agencia_id INT,
@@ -122,6 +138,7 @@ CREATE TABLE denuncia (
   FOREIGN KEY (agencia_id) REFERENCES agencia(id),
   FOREIGN KEY (denunciante_id) REFERENCES pessoa(id)
 );
+
 CREATE TABLE denuncia_investigacao (
   denuncia_id INT,
   investigacao_id INT,
@@ -129,6 +146,7 @@ CREATE TABLE denuncia_investigacao (
   FOREIGN KEY (denuncia_id) REFERENCES denuncia(id),
   FOREIGN KEY (investigacao_id) REFERENCES investigacao(id)
 );
+
 CREATE TABLE boletim (
   id INT AUTO_INCREMENT PRIMARY KEY,
   ocorrencia_id INT,

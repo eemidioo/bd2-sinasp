@@ -1,7 +1,9 @@
 DROP DATABASE IF EXISTS sinasp;
 CREATE DATABASE sinasp;
 USE sinasp;
+
 -- A ordem de importação é crucial devido às dependências de chave estrangeira.
+
 -- 1. Tabelas de localização
 SOURCE schema/01_localizacao.sql;
 -- 2. Tabelas relacionadas a pessoas
