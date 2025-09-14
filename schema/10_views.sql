@@ -31,6 +31,7 @@ FROM pessoa p
   LEFT JOIN bairro b ON r.bairro_id = b.id
   LEFT JOIN cidade ci ON b.cidade_id = ci.id
   LEFT JOIN uf u ON ci.uf_id = u.id;
+
 CREATE VIEW vw_profissional_detalhes AS
 SELECT p.id AS pessoa_id,
   p.nome AS nome_profissional,
@@ -46,6 +47,7 @@ FROM pessoa_profissao pp
   JOIN profissao prof ON pp.profissao_id = prof.id
   JOIN unidade u ON prof.unidade_id = u.id
   JOIN agencia a ON u.agencia_id = a.id;
+
 CREATE VIEW vw_ocorrencia_detalhes AS
 SELECT o.id AS ocorrencia_id,
   ot.nome AS tipo_ocorrencia,
@@ -74,6 +76,7 @@ FROM ocorrencia o
   LEFT JOIN cidade c ON b.cidade_id = c.id
   LEFT JOIN uf ON c.uf_id = uf.id
   LEFT JOIN unidade u ON o.unidade_id = u.id;
+
 CREATE VIEW vw_usuario_detalhes AS
 SELECT u.id AS usuario_id,
   u.login,
