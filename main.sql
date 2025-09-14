@@ -20,3 +20,5 @@ SOURCE schema / 07_investigacao.sql;
 SOURCE schema / 08_processo.sql;
 -- 9. Tabelas de usuários do sistema
 SOURCE schema / 09_usuario.sql;
+-- 10. Views do sistema
+SOURCE schema / 10_views.sql;
