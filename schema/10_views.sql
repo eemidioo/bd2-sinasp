@@ -90,3 +90,21 @@ FROM sinasp_usuario u
   LEFT JOIN pessoa_profissao pp ON u.profissional_id = pp.id
   LEFT JOIN pessoa p ON pp.pessoa_id = p.id
   LEFT JOIN sinasp_usuario_nivel_acesso una ON u.id = una.usuario_id;
+
+CREATE VIEW vw_endereco_detalhes AS
+SELECT
+  e.id,
+  uf.sigla AS uf,
+  c.nome AS cidade,
+  b.nome AS bairro,
+  r.cep,
+  r.nome AS rua,
+  e.numero,
+  e.complemento,
+  e.latitude,
+  e.longitude
+FROM endereco e
+JOIN rua r ON e.rua_id = r.id
+JOIN bairro b ON r.bairro_id = b.id
+JOIN cidade c ON b.cidade_id = c.id
+JOIN uf ON c.uf_id = uf.id;

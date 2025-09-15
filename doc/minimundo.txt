@@ -1,0 +1,34 @@
+Sistema Nacional de Segurança Pública e Ocorrências (SINASP)
+
+Em um ambiente onde a segurança pública é a prioridade, o Sistema de
+Gerenciamento de Ocorrências emerge como a central de comando que
+integra as forças de segurança e emergência. Ele é a plataforma
+digital que unifica a ação da polícia, bombeiros, defesa civil e
+agentes de trânsito, transformando o caos de uma emergência em uma
+resposta coordenada e eficaz. Mais do que um banco de dados, é o
+cérebro que organiza a informação para proteger a vida e o patrimônio.
+
+A Gestão de Incidentes: O sistema é o ponto de partida para qualquer
+chamado de emergência. A jornada começa com o registro das chamadas
+(190, 193), onde as informações iniciais são coletadas. As ocorrências
+são catalogadas em detalhes, com a identificação de cidadãos, vítimas
+e suspeitos. O sistema gera automaticamente boletins e laudos, que se
+tornam documentos oficiais para investigações futuras.
+
+Para garantir uma resposta rápida, o sistema gerencia todos os
+recursos disponíveis. As viaturas, armamentos e equipamentos são
+rastreados e alocados de acordo com a necessidade. As escalas de
+plantão dos profissionais são organizadas para garantir cobertura
+contínua e eficiente. A plataforma também permite o planejamento e a
+execução de operações conjuntas entre diferentes agências, como uma
+operação de resgate envolvendo bombeiros e polícia.
+
+A Justiça e a Segurança nas Ruas: O sistema também é uma ferramenta
+fundamental para o braço da justiça. Informações sobre mandados e
+prisões são acessíveis em tempo real, permitindo que agentes em campo
+validem a situação de um indivíduo de forma rápida e segura.
+
+No trânsito, a plataforma desempenha um papel crucial no registro e
+gerenciamento de infrações de trânsito. Cada multa ou infração é
+registrada no sistema, criando um histórico para o motorista e
+auxiliando na gestão da segurança viária.

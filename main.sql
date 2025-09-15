@@ -24,3 +24,7 @@ SOURCE schema/08_processo.sql;
 SOURCE schema/09_usuario.sql;
 -- 10. Views do sistema
 SOURCE schema/10_views.sql;
+-- 11. Procedures do sistema
+SOURCE schema/11_procedures.sql
+-- 12. Triggers do sistema
+SOURCE schema/12_triggers.sql
