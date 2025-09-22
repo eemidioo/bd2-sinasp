@@ -28,3 +28,5 @@ SOURCE schema/10_views.sql;
 SOURCE schema/11_procedures.sql
 -- 12. Triggers do sistema
 SOURCE schema/12_triggers.sql
+-- 13. Events do sistema
+SOURCE schema/13_events.sql

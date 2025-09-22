@@ -150,3 +150,14 @@ CREATE TABLE operacao_meta_operacional (
   FOREIGN KEY (operacao_id) REFERENCES operacao(id),
   FOREIGN KEY (meta_id) REFERENCES meta_operacional(id)
 );
+
+CREATE TABLE IF NOT EXISTS ocorrencia_historico (
+  id INT,
+  tipo_id INT,
+  endereco_id INT,
+  unidade_id INT,
+  data_hora DATETIME,
+  status VARCHAR(50),
+  descricao TEXT,
+  data_arquivamento DATETIME DEFAULT NOW()
+); 
