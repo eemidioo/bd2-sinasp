@@ -151,13 +151,16 @@ CREATE TABLE operacao_meta_operacional (
   FOREIGN KEY (meta_id) REFERENCES meta_operacional(id)
 );
 
-CREATE TABLE IF NOT EXISTS ocorrencia_historico (
-  id INT,
+CREATE TABLE ocorrencia_historico (
+  id INT AUTO_INCREMENT PRIMARY KEY,
   tipo_id INT,
   endereco_id INT,
   unidade_id INT,
   data_hora DATETIME,
   status VARCHAR(50),
   descricao TEXT,
-  data_arquivamento DATETIME DEFAULT NOW()
-); 
+  data_arquivamento DATETIME DEFAULT NOW(),
+  FOREIGN KEY (tipo_id) REFERENCES ocorrencia_tipo(id),
+  FOREIGN KEY (endereco_id) REFERENCES endereco(id),
+  FOREIGN KEY (unidade_id) REFERENCES unidade(id)
+);

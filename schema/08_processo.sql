@@ -145,3 +145,11 @@ CREATE TABLE protecao_testemunha (
   descricao TEXT,
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
+
+CREATE TABLE IF NOT EXISTS processo_relatorio_mensal (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  periodo CHAR(7) UNIQUE NOT NULL, -- formato YYYY-MM
+  total_processos INT DEFAULT 0,
+  total_investigacoes INT DEFAULT 0,
+  data_geracao DATETIME DEFAULT NOW()
+);
