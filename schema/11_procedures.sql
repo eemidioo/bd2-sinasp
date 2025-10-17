@@ -1,3 +1,5 @@
+-- Procedures
+
 DELIMITER $$
 
 CREATE PROCEDURE endereco_criar (

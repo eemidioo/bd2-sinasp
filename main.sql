@@ -70,3 +70,46 @@ SOURCE schema/11_procedures.sql
 SOURCE schema/12_triggers.sql
 -- 13. Events do sistema
 SOURCE schema/13_events.sql
+
+-- Índices de performance. Eles podem acelerar consultas frequentes,
+-- filtros por datas, status, nomes e atributos críticos sem
+-- UNIQUE/PRIMARY KEY.
+-- cidade
+CREATE INDEX idx_cidade_nome ON cidade(nome);
+-- bairro
+CREATE INDEX idx_bairro_nome ON bairro(nome);
+-- rua
+CREATE INDEX idx_rua_nome ON rua(nome);
+-- endereco
+CREATE INDEX idx_endereco_latitude ON endereco(latitude);
+CREATE INDEX idx_endereco_longitude ON endereco(longitude);
+-- pessoa
+CREATE INDEX idx_pessoa_nome ON pessoa(nome);
+CREATE INDEX idx_pessoa_data_nascimento ON pessoa(data_nascimento);
+-- condutor
+CREATE INDEX idx_condutor_cnh_validade ON condutor(cnh_validade);
+-- veiculo
+CREATE INDEX idx_veiculo_renavam ON veiculo(renavam);
+CREATE INDEX idx_veiculo_modelo ON veiculo(modelo);
+CREATE INDEX idx_veiculo_cor ON veiculo(cor);
+-- multa
+CREATE INDEX idx_multa_data_emissao ON multa(data_emissao);
+CREATE INDEX idx_multa_data_vencimento ON multa(data_vencimento);
+CREATE INDEX idx_multa_valor ON multa(valor);
+-- ocorrencia
+CREATE INDEX idx_ocorrencia_data_hora ON ocorrencia(data_hora);
+CREATE INDEX idx_ocorrencia_status ON ocorrencia(status);
+-- investigacao
+CREATE INDEX idx_investigacao_data_inicio ON investigacao(data_inicio);
+CREATE INDEX idx_investigacao_data_encerramento ON investigacao(data_encerramento);
+-- laudo
+CREATE INDEX idx_laudo_data_emissao ON laudo(data_emissao);
+-- inquerito_policial
+CREATE INDEX idx_inquerito_data_abertura ON inquerito_policial(data_abertura);
+CREATE INDEX idx_inquerito_data_encerramento ON inquerito_policial(data_encerramento);
+-- evidencia
+CREATE INDEX idx_evidencia_data_coletada ON evidencia(data_coletada);
+-- incidente_cibernetico
+CREATE INDEX idx_incidente_cibernetico_data_detectado ON incidente_cibernetico(data_detectado);
+-- processo
+CREATE INDEX idx_processo_data_inicio ON processo(data_inicio);

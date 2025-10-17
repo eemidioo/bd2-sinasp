@@ -1,3 +1,5 @@
+-- Events
+
 DELIMITER $$
 
 CREATE EVENT IF NOT EXISTS arquivar_ocorrencias_antigas

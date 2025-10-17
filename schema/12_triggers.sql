@@ -1,3 +1,5 @@
+-- Triggers
+
 DELIMITER $$
 
 CREATE TRIGGER trg_pessoa_endereco_principal_ins
