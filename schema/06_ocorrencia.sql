@@ -1,5 +1,6 @@
 -- Ocorrência / Operação
 
+-- 'ACIDENTE', 'FURTO', 'INCENDIO', ...
 CREATE TABLE ocorrencia_tipo (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) UNIQUE NOT NULL
@@ -26,6 +27,7 @@ CREATE TABLE ocorrencia_crime (
   FOREIGN KEY (crime_id) REFERENCES crime(id)
 );
 
+-- 'VITIMA', 'SUSPEITO', 'TESTEMUNHA', 'COMUNICANTE', 'AGENTE', ...
 CREATE TABLE participante_ocorrencia_papel (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) UNIQUE NOT NULL

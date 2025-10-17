@@ -1,5 +1,6 @@
 -- Agência
 
+-- 'POLICIA', 'BOMBEIRO', 'DEFESA_CIVIL', 'TRANSITO', 'JUDICIAL', 'FISCAL', ...
 CREATE TABLE agencia_tipo (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) UNIQUE NOT NULL
@@ -21,6 +22,7 @@ CREATE TABLE agencia_telefone (
   FOREIGN KEY (telefone_id) REFERENCES telefone(id)
 );
 
+-- 'DELEGACIA', 'BATALHAO', 'BASE', 'SEDE', 'POSTO', ...
 CREATE TABLE unidade_tipo (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) UNIQUE NOT NULL

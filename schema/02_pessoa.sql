@@ -1,5 +1,6 @@
 -- Pessoa
 
+-- 'FIXO', 'CELULAR', 'COMERCIAL', 'RECADO', ...
 CREATE TABLE telefone_tipo (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) UNIQUE NOT NULL
@@ -13,6 +14,7 @@ CREATE TABLE telefone (
   FOREIGN KEY (tipo_id) REFERENCES telefone_tipo(id)
 );
 
+-- 'M', 'F', ...
 CREATE TABLE pessoa_sexo (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) UNIQUE NOT NULL
@@ -53,6 +55,7 @@ CREATE TABLE condutor (
   FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
 
+-- 'A', 'B', 'C', 'D', 'E', ...
 CREATE TABLE categoria_cnh (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) UNIQUE NOT NULL
