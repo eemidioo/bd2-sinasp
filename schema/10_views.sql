@@ -108,3 +108,21 @@ JOIN rua r ON e.rua_id = r.id
 JOIN bairro b ON r.bairro_id = b.id
 JOIN cidade c ON b.cidade_id = c.id
 JOIN uf ON c.uf_id = uf.id;
+
+CREATE VIEW vw_ilicitos_pessoa AS
+SELECT
+  c.pessoa_id AS id_pessoa,
+  i.id AS id_ilicito,
+  'INFRACAO' AS tipo,
+  i.descricao,
+  i.pontuacao AS gravidade
+FROM infracao i
+JOIN condutor c ON c.id = i.condutor_id
+UNION
+SELECT
+  cr.pessoa_id,
+  cr.id,
+  'CRIME' AS tipo,
+  cr.descricao,
+  cr.gravidade
+FROM crime cr;
