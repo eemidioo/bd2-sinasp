@@ -70,4 +70,38 @@ BEGIN
   COMMIT;
 END $$
 
+CREATE PROCEDURE multas_recentes_resumo (
+  IN p_data_inicio DATE,
+  IN p_data_fim DATE
+)
+BEGIN
+  CREATE TEMPORARY TABLE tmp_multas (
+    condutor_id INT,
+    total_multas INT,
+    total_valor DECIMAL(12, 2)
+  );
+
+  INSERT INTO tmp_multas (condutor_id, total_multas, total_valor)
+  SELECT
+    i.condutor_id,
+    COUNT(m.id) AS total_multas,
+    SUM(m.valor) AS total_valor
+  FROM infracao i
+  JOIN multa m ON m.infracao_id = i.id
+  WHERE m.data_emissao BETWEEN p_data_inicio AND p_data_fim
+  GROUP BY i.condutor_id;
+
+  SELECT
+    c.id AS condutor_id,
+    p.nome AS condutor_nome,
+    t.total_multas,
+    t.total_valor
+  FROM tmp_multas t
+  JOIN condutor c ON c.id = t.condutor_id
+  JOIN pessoa p ON p.id = c.pessoa_id
+  ORDER BY t.total_valor DESC;
+
+  DROP TEMPORARY TABLE IF EXISTS tmp_multas;
+END $$
+
 DELIMITER ;
