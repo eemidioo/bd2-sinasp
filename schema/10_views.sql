@@ -126,3 +126,20 @@ SELECT
   cr.descricao,
   cr.gravidade
 FROM crime cr;
+
+CREATE VIEW vw_multas_por_categoria AS
+WITH condutor_categoria_nome AS (
+  SELECT
+    cc.condutor_id,
+    cat.nome AS categoria
+  FROM categoria_cnh cat
+  JOIN condutor_categoria cc ON cc.categoria_cnh_id = cat.id
+)
+SELECT
+  nome.categoria,
+  COUNT(m.id) AS total_multas,
+  SUM(m.valor) AS total_valor
+FROM condutor_categoria_nome nome
+JOIN infracao i ON i.condutor_id = nome.condutor_id
+JOIN multa m ON m.infracao_id = i.id
+GROUP BY nome.categoria;
